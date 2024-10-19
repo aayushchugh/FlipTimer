@@ -1,6 +1,6 @@
 services:
   fliptimer_ayushchugh_com_nextjs:
-    image: node:18-alpine
+    image: fliptimer.ayushchugh.com
     container_name: fliptimer.ayushchugh.com
     working_dir: /app
     ports:
