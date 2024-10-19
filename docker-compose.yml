@@ -4,7 +4,7 @@ services:
     container_name: timer.ayushchugh.com
     working_dir: /app
     ports:
-      - "3001:3000"
+      - "3002:3000"
     expose:
       - "3000"
     command: "npm start"
