@@ -5,15 +5,24 @@ import FlipClock from "../components/FlipClock";
 import { DatePicker } from "../components/DatePicker";
 
 export default function Home() {
-	const [targetDate, setTargetDate] = useState(
-		new Date(localStorage.getItem("targetDate") as string) ??
-			new Date("2025-01-01")
-	);
+	const [targetDate, setTargetDate] = useState(new Date("2025-01-01"));
+	const [isInitialized, setIsInitialized] = useState(false);
 
-	// set target date to local storage
+	// Retrieve target date from localStorage after component mounts
 	useEffect(() => {
-		localStorage.setItem("targetDate", targetDate.toString());
-	}, [targetDate]);
+		const storedDate = localStorage.getItem("targetDate");
+		if (storedDate) {
+			setTargetDate(new Date(storedDate));
+		}
+		setIsInitialized(true); // Indicate that initialization is complete
+	}, []);
+
+	// Update localStorage whenever targetDate changes (after initialization)
+	useEffect(() => {
+		if (isInitialized) {
+			localStorage.setItem("targetDate", targetDate.toString());
+		}
+	}, [targetDate, isInitialized]);
 
 	return (
 		<main className="flex flex-col items-center justify-center h-screen gap-20">
