@@ -16,6 +16,11 @@ export default function Home() {
 	useEffect(() => {
 		const storedDate = localStorage.getItem("targetDate");
 		if (storedDate) {
+			// don't set target date if it's in the past
+			if (new Date(storedDate) < new Date()) {
+				return;
+			}
+
 			setTargetDate(new Date(storedDate));
 		}
 		setIsInitialized(true); // Indicate that initialization is complete
