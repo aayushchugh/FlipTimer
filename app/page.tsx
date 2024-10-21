@@ -28,6 +28,20 @@ export default function Home() {
 		}
 	}, [targetDate, isInitialized]);
 
+	// Global event listener to toggle fullscreen
+	useEffect(() => {
+		window.addEventListener("keydown", e => {
+			if (e.key === "f") {
+				toggleFullScreen();
+			}
+		});
+
+		// clear event listener on unmount
+		return () => {
+			window.removeEventListener("keydown", () => {});
+		};
+	}, []);
+
 	const toggleFullScreen = () => {
 		const element = mainRef.current;
 
