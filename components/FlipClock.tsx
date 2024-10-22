@@ -1,5 +1,6 @@
+// FlipClock.tsx
 import React, { FC, useEffect, useState } from "react";
-import FlipCard from "./FlipCard";
+import { AnimatedFlipCard } from "./FlipCard";
 import Column from "./Column";
 
 interface IFlipClockProps {
@@ -17,19 +18,19 @@ const FlipClock: FC<IFlipClockProps> = ({ targetDate }) => {
 		seconds: 0,
 	});
 
-	// calculate time
+	// Calculate time left
 	const calculateTimeLeft = () => {
-		const difference = +new Date(targetDate) - +new Date();
+		const difference = targetDate.getTime() - new Date().getTime();
 
 		if (difference > 0) {
 			setIsTimesUp(false);
 			setTimeLeft({
-				months: Math.floor(difference / (1000 * 60 * 60 * 24 * 30)), // 30 days
-				weeks: Math.floor(difference / (1000 * 60 * 60 * 24 * 7)), // 7 days
-				days: Math.floor(difference / (1000 * 60 * 60 * 24)), // 24 hours
-				hours: Math.floor((difference / (1000 * 60 * 60)) % 24), // 60 minutes
-				minutes: Math.floor((difference / 1000 / 60) % 60), // 60 seconds
-				seconds: Math.floor((difference / 1000) % 60), // 1000 milliseconds
+				months: Math.floor(difference / (1000 * 60 * 60 * 24 * 30)), // Approximate months
+				weeks: Math.floor((difference / (1000 * 60 * 60 * 24 * 7)) % 4), // Weeks in a month
+				days: Math.floor((difference / (1000 * 60 * 60 * 24)) % 7), // Days in a week
+				hours: Math.floor((difference / (1000 * 60 * 60)) % 24), // Hours in a day
+				minutes: Math.floor((difference / (1000 * 60)) % 60), // Minutes in an hour
+				seconds: Math.floor((difference / 1000) % 60), // Seconds in a minute
 			});
 		} else {
 			setIsTimesUp(true);
@@ -45,36 +46,47 @@ const FlipClock: FC<IFlipClockProps> = ({ targetDate }) => {
 	};
 
 	useEffect(() => {
-		const timer = setTimeout(() => {
+		calculateTimeLeft();
+		const timer = setInterval(() => {
 			calculateTimeLeft();
 		}, 1000);
 
-		return () => clearTimeout(timer);
-	});
+		return () => clearInterval(timer);
+	}, [targetDate]);
+
 	return (
 		<div className="flex flex-col items-center justify-center">
 			<div className="flex items-center gap-1 sm:gap-3 md:gap-5 lg:gap-7">
 				<div className="flex items-center">
-					<FlipCard title="Months" value={timeLeft?.months.toString()} />
+					<AnimatedFlipCard title="Months" digit={timeLeft.months.toString()} />
 					<Column />
 				</div>
 				<div className="flex items-center">
-					<FlipCard title="Weeks" value={timeLeft?.weeks.toString()} />
+					<AnimatedFlipCard title="Weeks" digit={timeLeft.weeks.toString()} />
 					<Column />
 				</div>
 				<div className="flex items-center">
-					<FlipCard title="Days" value={timeLeft?.days.toString()} />
+					<AnimatedFlipCard title="Days" digit={timeLeft.days.toString()} />
 					<Column />
 				</div>
 				<div className="flex items-center">
-					<FlipCard title="Hours" value={timeLeft?.hours.toString()} />
+					<AnimatedFlipCard
+						title="Hours"
+						digit={timeLeft.hours.toString().padStart(2, "0")}
+					/>
 					<Column />
 				</div>
 				<div className="flex items-center">
-					<FlipCard title="Minutes" value={timeLeft?.minutes.toString()} />
+					<AnimatedFlipCard
+						title="Minutes"
+						digit={timeLeft.minutes.toString().padStart(2, "0")}
+					/>
 					<Column />
 				</div>
-				<FlipCard title="Seconds" value={timeLeft?.seconds.toString()} />
+				<AnimatedFlipCard
+					title="Seconds"
+					digit={timeLeft.seconds.toString().padStart(2, "0")}
+				/>
 			</div>
 
 			{isTimesUp && (
