@@ -74,19 +74,24 @@ const FlipClock: FC<IFlipClockProps> = ({ targetDate }) => {
 						title="Hours"
 						digit={timeLeft.hours.toString().padStart(2, "0")}
 					/>
-					<Column />
+					<div className="hidden sm:flex">
+						<Column />
+					</div>
 				</div>
-				<div className="flex items-center">
+				<div className="hidden sm:flex items-center">
 					<AnimatedFlipCard
 						title="Minutes"
 						digit={timeLeft.minutes.toString().padStart(2, "0")}
 					/>
 					<Column />
 				</div>
-				<AnimatedFlipCard
-					title="Seconds"
-					digit={timeLeft.seconds.toString().padStart(2, "0")}
-				/>
+
+				<div className="hidden sm:flex">
+					<AnimatedFlipCard
+						title="Seconds"
+						digit={timeLeft.seconds.toString().padStart(2, "0")}
+					/>
+				</div>
 			</div>
 
 			{isTimesUp && (
